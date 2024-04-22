@@ -152,25 +152,15 @@ Object subclass: #OOStack
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStack methodsFor: 'status updates' stamp: 'fb 4/21/2024 19:25:46'!
+!OOStack methodsFor: 'state updates' stamp: 'fb 4/21/2024 19:25:46'!
 addItemToCollection: anItem
 
 	itemCollection addLast: anItem! !
 
-!OOStack methodsFor: 'status updates' stamp: 'fb 4/21/2024 19:38:41'!
-updateStatusToEmpty
+!OOStack methodsFor: 'state updates' stamp: 'fb 4/22/2024 12:37:57'!
+updateState
 
-	status := Empty new.! !
-
-!OOStack methodsFor: 'status updates' stamp: 'fb 4/21/2024 19:36:42'!
-updateStatusToMoreThanOneElement
-
-	status := MoreThanOneElement  new.! !
-
-!OOStack methodsFor: 'status updates' stamp: 'fb 4/21/2024 19:29:25'!
-updateStatusToOneElement
-
-	status := OneElement new.! !
+	status := OOStackState currentState: self.! !
 
 
 !OOStack methodsFor: 'internal messages' stamp: 'fb 4/21/2024 19:31:02'!
@@ -210,10 +200,10 @@ top
 	^status topIfItsPossible: self.! !
 
 
-!OOStack methodsFor: 'error raising' stamp: 'fb 4/21/2024 19:23:04'!
+!OOStack methodsFor: 'error raising' stamp: 'fb 4/22/2024 12:19:27'!
 raiseEmptyStackError
 
-	^self error:OOStack stackEmptyErrorDescription! !
+	^self error:self class stackEmptyErrorDescription! !
 
 
 !OOStack methodsFor: 'initialization' stamp: 'fb 4/21/2024 19:27:05'!
@@ -234,31 +224,47 @@ stackEmptyErrorDescription
 	^ 'stack is empty!!!!!!'! !
 
 
-!classDefinition: #OOStackStatus category: #'Stack-Exercise'!
-Object subclass: #OOStackStatus
+!classDefinition: #OOStackState category: #'Stack-Exercise'!
+Object subclass: #OOStackState
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStackStatus methodsFor: 'as yet unclassified' stamp: 'fb 4/21/2024 19:46:25'!
+!OOStackState methodsFor: 'as yet unclassified' stamp: 'fb 4/22/2024 12:37:26'!
+currentState: anOOStack
+	
+	^(OOStackState allSubclasses select: [:aSubclass | aSubclass isCurrentStateOf: anOOStack]) new.! !
+
+!OOStackState methodsFor: 'as yet unclassified' stamp: 'fb 4/21/2024 19:46:25'!
 popIfItsPossible: anOOStack
 
 	self subclassResponsibility! !
 
-!OOStackStatus methodsFor: 'as yet unclassified' stamp: 'fb 4/21/2024 19:21:16'!
+!OOStackState methodsFor: 'as yet unclassified' stamp: 'fb 4/21/2024 19:21:16'!
 pushItemInto: anOOStack
 
 	self subclassResponsibility! !
 
-!OOStackStatus methodsFor: 'as yet unclassified' stamp: 'fb 4/21/2024 19:46:43'!
+!OOStackState methodsFor: 'as yet unclassified' stamp: 'fb 4/21/2024 19:46:43'!
 topIfItsPossible: anOOStack
 
 	self subclassResponsibility! !
 
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'OOStackState class' category: #'Stack-Exercise'!
+OOStackState class
+	instanceVariableNames: ''!
+
+!OOStackState class methodsFor: 'state' stamp: 'fb 4/22/2024 12:37:26'!
+currentState: anOOStack
+	
+	^(OOStackState allSubclasses select: [:aSubclass | aSubclass isCurrentStateOf: anOOStack]) first new.! !
+
 
 !classDefinition: #Empty category: #'Stack-Exercise'!
-OOStackStatus subclass: #Empty
+OOStackState subclass: #Empty
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -269,70 +275,67 @@ popIfItsPossible: anOOStack
 
 	anOOStack raiseEmptyStackError! !
 
-!Empty methodsFor: 'as yet unclassified' stamp: 'fb 4/21/2024 19:26:22'!
+!Empty methodsFor: 'as yet unclassified' stamp: 'fb 4/22/2024 12:37:57'!
 push: anItem into: anOOStack
 
-	anOOStack updateStatusToOneElement.
-	anOOStack addItemToCollection: anItem.! !
+	anOOStack addItemToCollection: anItem.
+	anOOStack updateState.! !
 
 !Empty methodsFor: 'as yet unclassified' stamp: 'fb 4/21/2024 19:46:43'!
 topIfItsPossible: anOOStack
 
 	anOOStack raiseEmptyStackError! !
 
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Empty class' category: #'Stack-Exercise'!
+Empty class
+	instanceVariableNames: ''!
+
+!Empty class methodsFor: 'state' stamp: 'fb 4/22/2024 12:37:25'!
+isCurrentStateOf: anOOStack
+
+	^ anOOStack size = 0! !
+
 
-!classDefinition: #MoreThanOneElement category: #'Stack-Exercise'!
-OOStackStatus subclass: #MoreThanOneElement
+!classDefinition: #NotEmpty category: #'Stack-Exercise'!
+OOStackState subclass: #NotEmpty
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!MoreThanOneElement methodsFor: 'as yet unclassified' stamp: 'fb 4/21/2024 19:46:25'!
+!NotEmpty methodsFor: 'as yet unclassified' stamp: 'fb 4/22/2024 12:37:57'!
 popIfItsPossible: anOOStack
-
-	"hay que poner un if para ver si tenemos que cambiar al estado OneElement... que triste que es la vida sin
-	 polimorfismo... -Comentarista secreto"
 	
-	anOOStack size = 2
-		ifTrue: [anOOStack updateStatusToOneElement].
+	| element |
+	
+	element := anOOStack popElement.
+	
+	anOOStack updateState.
+	
+	^element.! !
 
-	^anOOStack popElement! !
-
-!MoreThanOneElement methodsFor: 'as yet unclassified' stamp: 'fb 4/21/2024 19:34:09'!
+!NotEmpty methodsFor: 'as yet unclassified' stamp: 'fb 4/22/2024 12:28:01'!
 push: anItem into: anOOStack
 
 	anOOStack addItemToCollection: anItem.! !
 
-!MoreThanOneElement methodsFor: 'as yet unclassified' stamp: 'fb 4/21/2024 19:46:43'!
+!NotEmpty methodsFor: 'as yet unclassified' stamp: 'fb 4/22/2024 12:27:48'!
 topIfItsPossible: anOOStack
 
 	^anOOStack topElement! !
 
-
-!classDefinition: #OneElement category: #'Stack-Exercise'!
-OOStackStatus subclass: #OneElement
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Stack-Exercise'!
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!OneElement methodsFor: 'as yet unclassified' stamp: 'fb 4/21/2024 19:46:25'!
-popIfItsPossible: anOOStack
+!classDefinition: 'NotEmpty class' category: #'Stack-Exercise'!
+NotEmpty class
+	instanceVariableNames: ''!
 
-	anOOStack updateStatusToEmpty.
-	^anOOStack popElement.! !
+!NotEmpty class methodsFor: 'state' stamp: 'fb 4/22/2024 12:37:26'!
+isCurrentStateOf: anOOStack
 
-!OneElement methodsFor: 'as yet unclassified' stamp: 'fb 4/21/2024 19:33:52'!
-push: anItem into: anOOStack
-
-	anOOStack updateStatusToMoreThanOneElement.
-	anOOStack addItemToCollection: anItem.! !
-
-!OneElement methodsFor: 'as yet unclassified' stamp: 'fb 4/21/2024 19:46:43'!
-topIfItsPossible: anOOStack
-
-	^anOOStack topElement! !
+	^ anOOStack size > 0! !
 
 
 !classDefinition: #SentenceFinderByPrefix category: #'Stack-Exercise'!
