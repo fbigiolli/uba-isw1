@@ -147,7 +147,7 @@ TestCase subclass: #SentenceFinderByPrefixTest
 
 !classDefinition: #OOStack category: #'Stack-Exercise'!
 Object subclass: #OOStack
-	instanceVariableNames: 'itemCollection status'
+	instanceVariableNames: 'itemCollection'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
@@ -157,10 +157,11 @@ addItemToCollection: anItem
 
 	itemCollection addLast: anItem! !
 
-!OOStack methodsFor: 'state updates' stamp: 'fb 4/22/2024 12:37:57'!
-updateState
+!OOStack methodsFor: 'state updates' stamp: 'fb 4/23/2024 00:15:19'!
+status
 
-	status := OOStackState currentState: self.! !
+	^OOStackState currentState: self.
+! !
 
 
 !OOStack methodsFor: 'internal messages' stamp: 'fb 4/21/2024 19:31:02'!
@@ -179,25 +180,25 @@ isEmpty
 	
 	^ itemCollection size = 0! !
 
-!OOStack methodsFor: 'operations' stamp: 'fb 4/21/2024 19:46:25'!
+!OOStack methodsFor: 'operations' stamp: 'fb 4/23/2024 00:15:58'!
 pop
 
-	^status popIfItsPossible: self.! !
+	^self status popIfItsPossible: self.! !
 
-!OOStack methodsFor: 'operations' stamp: 'fb 4/21/2024 19:27:44'!
+!OOStack methodsFor: 'operations' stamp: 'fb 4/23/2024 00:15:52'!
 push: anItem
 	
-	status push: anItem into: self ! !
+	self status push: anItem into: self ! !
 
 !OOStack methodsFor: 'operations' stamp: 'fb 4/21/2024 19:02:10'!
 size
 
 	^ itemCollection size! !
 
-!OOStack methodsFor: 'operations' stamp: 'fb 4/21/2024 19:46:43'!
+!OOStack methodsFor: 'operations' stamp: 'fb 4/23/2024 00:16:06'!
 top
 
-	^status topIfItsPossible: self.! !
+	^self status topIfItsPossible: self.! !
 
 
 !OOStack methodsFor: 'error raising' stamp: 'fb 4/22/2024 12:19:27'!
@@ -206,11 +207,10 @@ raiseEmptyStackError
 	^self error:self class stackEmptyErrorDescription! !
 
 
-!OOStack methodsFor: 'initialization' stamp: 'fb 4/21/2024 19:27:05'!
+!OOStack methodsFor: 'initialization' stamp: 'fb 4/23/2024 00:16:47'!
 initialize
 	
-	itemCollection := OrderedCollection ofSize: 0.
-	status := Empty new.! !
+	itemCollection := OrderedCollection ofSize: 0.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -275,11 +275,11 @@ popIfItsPossible: anOOStack
 
 	anOOStack raiseEmptyStackError! !
 
-!Empty methodsFor: 'as yet unclassified' stamp: 'fb 4/22/2024 12:37:57'!
+!Empty methodsFor: 'as yet unclassified' stamp: 'fb 4/23/2024 00:17:27'!
 push: anItem into: anOOStack
 
 	anOOStack addItemToCollection: anItem.
-	anOOStack updateState.! !
+! !
 
 !Empty methodsFor: 'as yet unclassified' stamp: 'fb 4/21/2024 19:46:43'!
 topIfItsPossible: anOOStack
@@ -305,16 +305,12 @@ OOStackState subclass: #NotEmpty
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!NotEmpty methodsFor: 'as yet unclassified' stamp: 'fb 4/22/2024 12:37:57'!
+!NotEmpty methodsFor: 'as yet unclassified' stamp: 'fb 4/23/2024 00:17:49'!
 popIfItsPossible: anOOStack
 	
-	| element |
+	^anOOStack popElement.
 	
-	element := anOOStack popElement.
-	
-	anOOStack updateState.
-	
-	^element.! !
+! !
 
 !NotEmpty methodsFor: 'as yet unclassified' stamp: 'fb 4/22/2024 12:28:01'!
 push: anItem into: anOOStack
