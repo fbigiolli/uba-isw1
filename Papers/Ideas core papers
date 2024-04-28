@@ -1,0 +1,241 @@
+PROGRAMMING AS THEORY BUILDING
+
+  El programador construye conocimiento sobre la realidad que esta buscando representar en la computadora. 
+  Este conocimiento esta en la mente del programador.
+
+  El primer punto que prueba el paper es que el texto del programa y la documentacion son insuficientes para representar las ideas de disenio mas importantes del programa.
+
+  Para ello, pone de ejemplo un compilador diseniado por el grupo A, sobre el cual el grupo B tiene que extender funcionalidades sin ayuda del grupo A, dando como resultado codigo que no aprovechaba todo lo que tenia originalmente el compilador, agregando codigo que destruyo la simplicidad.
+
+  Otro ejemplo que pone es el de un programa de monitoreo industrial, con aprox 200k lineas de codigo. 
+  Los programadores se basan en el conocimiento que adquirieron programando el programa para buscar errores, y aquellos grupos que usaban la documentacion para instalar estos programas en industrias se solian encontrar con problemas y dificultades para entenderlo, a diferencia de los programadores que lo entendian con facilidad.
+
+  Segun Ryle, lo que caracteriza la actividad intelectual es la capacidad de la persona para construir y tener una teoria, la cual usa para entender, explicar y hacer cosas sobre lo que se basa la teoria.
+
+  Segun esto, lo que un programador construye como teoria es como ciertas cosas del mundo son soportadas por un programa en una computadora.
+
+  Por eso, el programador puede explicar como la solucion se relaciona con el mundo real, por que cada parte del programa es lo que es, y es capaz de hacer cualquier modificacion al programa para representar el mundo de distinta manera.
+
+  En esta teoria, se descarta la posibilidad de hacer modificaciones a un programa a bajo costo para el caso general. Justamente, porque el programador tiene que construir ese conocimiento, no es solo una cuestion de editar texto.
+
+  Para esto, se deberia incluir flexibilidad en los programas al desarrollarlos, pero esto incrementa mucho su costo.
+
+  En caso de que no se requiera modificar la teoria, si no el programa en si, el programador que ya posee la teoria esta preparado para atender estas cuestiones, modificando el programa.
+
+  Para que un programa no pierda calidad, toda modificacion debe estar basada en la teoria de el.
+
+  Para incorporar un nuevo programador al equipo, no alcanza con que este en contacto con el codigo y documentacion, se requiere ademas la oportunidad de trabajar estrechamente con los programadores que tienen la teoria.
+
+  Reestablecer la teoria de un programa solamente desde la documentacion es estrictamente imposible.
+
+  Es preferible descartar el programa del que no se tiene la teoria y hacer uno nuevo a tratar de revivirlo. Este proceso puede incluso disminuir el costo.
+
+  Segun esta teoria no se puede establecer un metodo para el desarrollo, porque en ese caso deberia seguir una secuencia de acciones.
+
+  Muchas discusiones de la epoca asumian que la programacion es similar a la produccion industrial, siendo el programador un componente de esa cadena, que se comporta como una maquina que sigue reglas. La teoria plantea lo contrario, el programador tiene la teoria, entonces NO puede ser reemplazado facilmente en la cadena de produccion. Se lo debe tratar como, x ej, a un abogado/ingeniero, su valor viene de su capacidad intelectual.
+
+  La conclusion de la idea del paper es que la programacion se debe entender como una construccion de teoria, y plantear lo dicho anteriormente, que el programador no es reemplazable, y lo prueba con ambos ejemplos, compilador y software de monitoreo. Tambien expone que no existe un metodo para desarrollar software.
+
+THE DESIGN OF EVERYDAY THINGS
+
+  Las partes importantes deben ser visibles, y deben comunicar el mensaje correcto, ejemplo puerta que escondia bizagra y no se entendia para donde abrirla, proyector con un solo boton que hace varias funciones.
+
+  Las cosas deben tener indicios que permitan descubrir como se usan.
+  Es un error tener instrucciones pobres, y falta de visibilidad de como se usan las cosas. Ejemplo, lavarropas con mil funciones poco claras.
+
+  Todo lo que pasa despues de una accion pareece ser causado por dicha accion. Si hago una accion y aparentemente no paso nada, entonces uno concluye que no fue efectiva.
+
+  "Affordances",  Psicologia de los materiales y de las cosas: uno percibe las propiedades de las cosas, y en base a eso determina para que sirve. Una silla es para sentarse, una pelota para rebotar etc.
+  Mucha informacion viene de la apariencia del objeto, un diseniador debe comunicar claramente la operacion q el objeto hace.
+  Ejemplo tijeras, son claras y se entiende perfecto que hacen, donde poner (y no poner) la mano. Contraejemplo relojes con dos botones y mil funciones q no se entienden que ni como hacerlas.
+
+  No hace falta entender las fisicas ni nada complejo de lo q usamos, si no el mapeo entre los controles y los outputs.
+
+  La gente tiene modelos mentales de como funcionan las cosas, hay que aprovecharlos. Estos modelos se forman en base a realizar acciones y viendo que pasa con el objeto. Ejemplo heladera que tiene opciones incoherentes.
+
+  Ejemplo telefono con mil operaciones q nunca se terminan usando porque no se entiende como. De este se deriva que:
+
+  Cada control deberia tener una sola funcion, de modo que el usuario mapee 1 a 1 accion-resultado (o lo mas cercano a 1 a 1 posible) (menem reference).
+
+  Es importante mapear correspondiente a lo q hace cada cosa, un sonido mas fuerte puede significar una cantidad mas grande por ejemplo. Ejemplo ajuste de asiento mercedes benz, uno mueve la palanquita para adelante y se va para adelante, etc.
+
+  Algo es facil de usar cuando hay visibilidad del set de posibles acciones, y cuando los controles muestran mapeos naturales.
+
+  Debe haber feedback cuando se hace una accion. Por ejemplo , un buen  disenio es el floppy disk, que entra de una sola forma.
+
+  Si se lanza un producto al mercado que tiene un muy mal disenio dos o tres veces, es probable que la gente asocie esa feature mal implementada original al producto, y por lo tanto aunque lo arreglemos es muy dificil tener exito.
+
+
+DESIGN PRINCIPLES BEHIND SMALLTALK 
+
+  El proposito de ST es proveer soporte de computadora para el espiritu creativo.
+
+  Aprovechar los mecanismos de pensamiento humanos que fueron pulidos por millones de anios.
+
+  El sistema debe ser totalmente comprensible por un individuo solitario
+
+  El sistema no debe tener barreras entre el individuo y self.
+
+  El sistema debe tener un conjunto minimo de partes no modificables, lo mas generales posibles.
+
+  Para proveer modelos compatibles con la mente, un lenguaje de programacion debe soportar el concepto de objeto y proveer una manera uniforme de referirse a los objetos del universo.
+
+  El sistema debe proveer administracion automatica del almacenamiento.
+
+  La computación debería ser vista como una capacidad intrínseca de los objetos que pueden ser invocados uniformemente enviándoles mensajes. 
+
+  Smalltalk provee una solución limpia: envía el nombre de la operación deseada, juntamente con cualquier parámetro necesario, como un mensaje al número, entendiendo que es el receptor el que mejor sabe cómo realizar la operación deseada.
+
+  Ningún componente en un sistema complejo debería depender de los detalles internos de ningún otro componente. 
+
+  Un lenguaje debe proveer un medio para clasificar objetos similares, y para agregar nuevas clases de objetos en pie de igualdad con las clases centrales del sistema.
+
+  Un programa sólo debería especificar el comportamiento esperado de los objetos, no su representación, ej smallinteger vs largeinteger.
+
+  Cada componente independiente de un sistema solo debería aparecer en un sólo lugar. Smalltalk promueve diseños bien factorizados a través de la herencia.
+
+  Cuando un sistema está bien factorizado, un gran reaprovechamiento está disponible tanto para los usuarios como para los implementadores. 
+
+  Una especificación de máquina virtual establece un marco para la aplicación de tecnología. 
+
+  Interfaz de usuario:
+
+    Cada componente accesible al usuario debería ser capaz de presentarse de una manera entendible para ser observado y manipulado.
+
+    SO. Un sistema operativo es una colección de cosas que no encajan dentro de un lenguaje. No debería existir. por ej, administracion del almacenamiento, sistema de archivos, entrada del teclado, etc. ST usa primitivas para responder mensajes que se encargan de esto.
+
+
+MODERN SOFTWARE ENGINEERING:
+
+  El desarrollo de software es un proceso de aprendizaje y descubrimiento, y por lo tanto, debemos volvernos expertos en aprender para tener éxito.
+
+  El mejor enfoque de la humanidad para aprender es la ciencia.
+
+  Metodo cientifico :
+    Caracterizar
+    Hipotetizar
+    Predecir
+    Experimentar
+
+  La ingeniería de software es la aplicación de un enfoque científico y empírico para encontrar soluciones eficientes y económicas a los problemas prácticos en el software.
+
+  Debemos volvernos expertos en aprender y expertos en administrar complejidad. 
+
+  Para ser expertos en aprender:
+    Trabajar iterativamente
+    Utilizar feedback inmediato de alta calidad
+    Trabajar incrementalmente
+    Ser experimentales
+    Ser empiricos
+
+  El desarrollo de software es un ejercicio en la exploración y el descubrimiento. Siempre estamos tratando de aprender más sobre qué quieren nuestros usuarios del sistema, como resolver mejor los problemas que se nos presentan, y como aplicar mejor las técnicas y herramientas a nuestra disposición. Aprendemos que cometimos un error y tenemos que arreglar algunas cosas.
+
+  Para ser expertos en administrar complejidad: 
+    Modularidad
+    Cohesion
+    Separacion de preocupaciones
+    Abstraccion
+    Acoplamiento suelto
+
+  (Nota al margen, por administrar complejidad se refiere a la complejidad de "leer/interpretar" el codigo, no la complejidad temporal/espacial)
+
+  El desarrollo de software es una actividad compleja y sofisticada. Es ridículo asumir que cada individuo o incluso cada equipo puede (y debe) inventar como enfocarlo, desde cero, cada vez que empezamos un nuevo trabajo.
+
+  El gran problema con ser “proscriptivo” o muy “directivo” es: qué pasa si algunas de nuestras ideas son erróneas o están incompletas? Lo van a ser inevitablemente, por lo que cómo podemos desafiar y refutar malas ideas, viejas pero bien establecidas, y evaluar nuevas ideas, potencialmente excelentes? A esto lo llamamos ciencia, y cuando aplicamos este tipo de pensamiento a la resolución de problemas prácticos, lo llamamos ingeniería.  
+
+  Para la mayoría de empeños humanos, la producción de las “cosas” es la parte difícil. Puede tomar esfuerzo e ingeniosidad diseñar un auto, un avión o un teléfono móvil, pero tomar esa idea inicial del prototipo hacia una producción en masa es inmensamente más caro y complicado. Para nosotros, la produccion consiste en tocar un boton. 
+
+  Por pensar que nos tenemos que preocupar de la prod, aplicamos un estilo de pensamiento erroneo a nuestra industra, en cascada.
+
+  No necesitamos preocuparnos si nuestros modelos se corresponden con la realidad; nuestros modelos son la realidad de nuestro sistema, por lo que podemos verificarlos. No necesitamos preocuparnos por el costo de cambiarlos. Son software, por lo tanto, son dramáticamente más fáciles de cambiar (al menos comparados con un puente).  
+
+POLYMORPHIC HIERARCHY
+
+   Tratar de evitar refrasear el nombre del método.
+
+   Tratar de usar la descripción del método para describir el método entero. 
+
+   Evitar comentarios. Si el metodo es muy raro abstraerlo a otro metodo cuyo nombre describa lo que esta haciendo.
+
+   Separar la descripción del método en dos partes: propósito y detalles de implementación. Propósito explica que hace, detalles de implementacion son opcionales. Es la explicacion de por que el codigo es tan raro, si es bueno no lo necesita.
+
+   Como los metodos son reutiizables, su proposito (nombre) tambien lo es, entonces hay que definirlo arriba en la jerarquia y usar subclass responsability. Esto porque los implementors pueden ser distintos.
+
+   Al crear una subclase, no solo pensar en cómo debería funcionar, pensar también en como debería diferenciarse de su superclase. Solo debe implementar metodos que la superclase no sabe hacer.
+
+   Cuando todos los implementadores de una jerarquia tienen el mismo proposito, son polimorficos.
+
+   Para que dos métodos sean polimórficos, no solo necesitan tener el mismo nombre, sino que también deben comportarse de la misma manera. Esto significa que no solo aceptan la misma cantidad de parámetros, sino que cada parámetro es del mismo tipo en ambos métodos. Ambos métodos deben producir los mismos efectos, y cambiar el estado del receptor en la misma manera. 
+
+   La clase abstracta que introduje para hacer la jerarquía polimórfica es lo que llamo una clase Template. La clase Template es un patrón que crea jerarquías polimórficas.
+
+A Simple Technique for Handling Multiple Polymorphism
+
+  El estilo de programación orientado a objetos fue introducido para superar la barrera de complejidad del polimorfismo en lenguajes extensibles.
+
+  La solución convencional a este polimorfismo era testear para cada tipo y luego ejecutar código apropiado para ese caso. Viola principios basicos de la modularidad.
+
+  La introducción del paradigma de mensajes finalmente superó esta barrera, y permitió que la promesa de los lenguajes extensibles sea completa
+
+  Consideremos como ejemplo el caso de objetos gráficos y los puertos en los cuales estos objetos pueden ser mostrados. Claramente, una variable conteniendo un objeto gráfico va a ser frecuentemente polimórfica, tomando valores como rectángulos, óvalos, bitmaps, u objetos más complejos
+
+  La solucion es el double dispatch.
+
+  Se le manda mensaje a cada objeto grafico, por ej 
+
+  <Rectangle> displayOn: aPort
+  aPort displayRectangle: self
+
+  y en display port: 
+
+  <DisplayPort> displayRectangle: aRect
+  "code to display a rectangle on a displayPort"  
+
+  la idea es que el cuadrado "redirecciona" al puerto correspondiente, pasando en el nombre del mensaje la informacion de que se esta imprimiendo un cuadrado, por lo que ese mensaje implementara el metodo para un cuadrado. 
+
+THE NULL OBJECT PATTERN
+
+  A veces, una clase que requiere un colaborador no necesita que el colaborador haga algo. Sin embargo, la clase desea tratar un colaborador que no hace nada de la misma manera que trata a uno que sí provee comportamiento.
+
+  Ejemplo: el paradigma Modelo-Vista-Controlador de Smalltalk 80.
+
+  Una vista puede ser solo de lectura. Como la vista no recoge input del usuario, no necesita un controlador. Sin embargo, Vista y sus subclases están implementadas para esperar un controlador, y usan su controlador extensamente.
+
+  Si ninguna instancia de la clase vista necesitara nunca un controlador, entonces la clase no necesitaría ser una subclase de Vista. Sin embargo, esto no va a funcionar para una clase que tiene algunas instancias que requieren un controlador y algunas que no lo hacen. Entonces, la clase es subclase de vista y requiere un controlador.
+
+  Se podria establecer el controlador en nil, pero tenemos que andar chequeando todo el tiempo que no sea nil con ifs. 
+
+  Por eso, es mas facil crear un nuevo NullObject, que se establece como controlador en este caso. Cuando le enviamos un mensaje a este objeto, no hace nada.
+
+  Un objeto Null puede utilizarse cuando:
+    Un objeto requiere un colaborador. El objeto Null no introduce esta colaboración, solamente utiliza una colaboración que ya existe. 
+
+    Algunas instancias de un colaborador deberían hacer nada.
+
+    Se quiere que los clientes puedan ignorar la diferencia entre un colaborador que provee comportamiento real y uno que no hace nada. De esta manera, el cliente no debe chequear explícitamente por nil u otros valores especiales.
+
+    Se quiere poder reutilizar el comportamiento de “hacer nada” para que varios clientes que puedan llegar a necesitarlo van a trabajar consistentemente de la misma manera.
+
+    Todo el comportamiento que puede ser el de “hacer nada” es encapsulado en la clase del colaborador. 
+
+    La jerarquia queda:
+
+      AbstractObject
+        RealObject
+        NullObject
+
+    Se usa la interfaz de abstractObject para colaborar con nullobject
+
+    El patron null:
+    Define jerarquías de clase que consisten de objetos reales y objetos Null
+    Define jerarquías de clase que consisten de objetos reales y objetos Null
+    Encapsula el código de “hacer nada” en el objeto Null
+    Hace que el código de “hacer nada” del objeto Null sea simple de reutilizar. 
+    Hace que el comportamiento de “hacer nada” sea difícil de distribuir o mezclar con el comportamiento real de varios objetos colaborativos.
+    Puede necesitar crear una nueva clase de objeto Null para cada clase nueva de objeto abstracto.
+    Puede ser difícil de implementar si varios Clientes no se ponen de acuerdo en como el objeto Null debería hacer “nada”.
+
+    !!!!
+    SIEMPRE ACTUA COMO UN OBJETO DE HACER NADA, NO SE TRANSFORMA EN OBJETO REAL !!!
+
+    se puede implementar de varias formas, como singleton, instancia especial de un obj real, patron state, etc.
