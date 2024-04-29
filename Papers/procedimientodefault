@@ -1,0 +1,64 @@
+Si hay un while que SOLO recorre, se puede usar
+nombreColeecion do: [:item | codigo del while]
+
+
+
+Si hay un while para chequear si algo esta en una coleccion:
+
+coleccion includes: elemento, si queremos chequear que NO este, a esto le podemos aplicar not.
+
+
+
+Si queremos remover un elemento de la coleccion, 
+treesAt remove: aPosition ifAbsent: []
+
+
+
+Si queremos ver si una coleccion tiene mas de un elemento, podemos usar
+
+detect: [:item | condicionAChequear] ifFound: [loQueQueremosHacerSiEncontramos]  ifNone:[si buscamos mas de uno, anidamos otro detect, si no lo que queremos hacer si no esta]
+
+De todas formas, queda poco prolijo y conviene usar los if en vez de anidar detects.
+
+
+
+Si hay un while que ademas de recorrer, acumula en una variable usamos inject into:
+
+"Accumulate a running value associated with evaluating the argument,
+binaryBlock, with the current value and the receiver as block arguments"
+For instance, to sum a collection, use: 
+collection inject: 0 into: [:subTotal :next | subTotal + next]
+
+EJEMPLO PIRATAS: 
+
+acc := pirates inject: true into: [:canMove :pirate | canMove & (self move: pirate to: aPosition in: terrain)]
+
+collection inject: valorInicial into: [:valorActual :item| codigo while]
+
+
+
+
+
+
+
+POLIMORFISMO
+
+tener en cuenta que al enviar mensaje hay que poner en el nombre quien lo manda, ya que el que lo recibe no debe perder el contexto
+ej:
+Bucanero le manda al terreno Tree, el mensaje tiene que ser, por ejemplo bucanero: anBucanero seMueveA: posicion
+De esta forma, podemos sacar los ifs porque desde la clase del Bucanero vamos a estar mandando un mensaje al terreno que se encarga de
+hacer lo necesario para el Bucanero en especifico. Ese mensaje puede hacer un dispatch a Bucanero nuevamente, hacer forwarding o directamente ejecutar la accion.
+
+
+
+DESPUES DE HACER TODO ESO, CATEGORIZAR TODOS LOS MENSAJES Y FIJARSE QUE TODOS ESTEN DEFINIDOS EN LA CLASE ABSTRACTA
+
+
+
+
+
+
+TESTS
+
+Si la inicializacion se repite para TODOS los tests, creamos el mensaje setUp y la hacemos ahi en variables de instancia, no de metodo.
+Si en algun assert tenemos la descripcion escrita textual, y no en un mensaje del estilo errorXXXDescription, fijarse si no se repite.
