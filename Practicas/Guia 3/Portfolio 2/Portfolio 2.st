@@ -1,4 +1,4 @@
-!classDefinition: #PortfolioTest category: 'Portfolio 2'!
+!classDefinition: #PortfolioTest category: #'Portfolio 2'!
 TestCase subclass: #PortfolioTest
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -214,7 +214,7 @@ test15PortfolioCanNotIncludeAnyOfTheComposedAccountOfPortfolioToAdd
 			self assert: portfolioToModify accountsIsEmpty ]! !
 
 
-!classDefinition: #ReceptiveAccountTest category: 'Portfolio 2'!
+!classDefinition: #ReceptiveAccountTest category: #'Portfolio 2'!
 TestCase subclass: #ReceptiveAccountTest
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -305,41 +305,244 @@ test07AccountKnowsItsTransactions
 ! !
 
 
-!classDefinition: #ReportTest category: 'Portfolio 2'!
+!classDefinition: #ReportTest category: #'Portfolio 2'!
 TestCase subclass: #ReportTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio 2'!
 
-!ReportTest methodsFor: 'as yet unclassified' stamp: 'fb 5/20/2024 21:33:17'!
-test01EmptyAccountSummaryReturnsBalance0
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 12:28:09'!
+test01EmptyReceptiveAccountSummaryReturnsBalance0
 
-	| account expectedSummary summary |
+	| account expectedSummary|
 	account := ReceptiveAccount new.
-	
-	summary := AccountSummary for: account.
 	
 	expectedSummary := OrderedCollection with: 'Balance = 0'.
 	
-	self assert: summary report equals: expectedSummary. ! !
+	self assert: account summary equals: expectedSummary. ! !
 
-!ReportTest methodsFor: 'as yet unclassified' stamp: 'fb 5/20/2024 21:39:24'!
-test02AccountWithDepositReportsCorrectly
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 12:28:18'!
+test02ReceptiveAccountWithDepositReportsCorrectly
 
-	| account expectedSummary summary |
+	| account expectedSummary |
 	account := ReceptiveAccount new.
 	
-	account register: (Deposit for: 50).
+	account register: (Deposit for: 100).
 	
-	summary := AccountSummary for: account.
+	expectedSummary := OrderedCollection with: 'Deposito por 100.' with: 'Balance = 100'.
 	
-	expectedSummary := OrderedCollection with: 'Deposito por 50' with: 'Balance = 0'.
+	self assert: account summary equals: expectedSummary. ! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 12:28:23'!
+test03ReceptiveAccountWithWithdrawReportsCorrectly
+
+	| account expectedSummary |
+	account := ReceptiveAccount new.
 	
-	self assert: summary report equals: expectedSummary. ! !
+	account register: (Withdraw for: 50).
+	
+	expectedSummary := OrderedCollection with: 'Extraccion por 50.' with: 'Balance = -50'.
+	
+	self assert: account summary equals: expectedSummary. ! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 12:28:26'!
+test04ReceptiveAccountsWithTransferReportCorrectly
+
+	| account1 account2 expectedSummaryAccount1 expectedSummaryAccount2 |
+	
+	account1 := ReceptiveAccount new.
+	account2 := ReceptiveAccount new.
+	
+	Transfer for: 20 from: account1 to: account2.
+	
+	expectedSummaryAccount1 := OrderedCollection with: 'Salida por transferencia de 20.' with: 'Balance = -20'.
+	expectedSummaryAccount2 := OrderedCollection with: 'Entrada por transferencia de 20.' with: 'Balance = 20'.
+	
+	self assert: account1 summary equals: expectedSummaryAccount1. 
+	self assert: account2 summary equals: expectedSummaryAccount2. ! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 12:28:31'!
+test05ReceptiveAccountWithMoreThanOneMovementReportsCorrectly
+
+	| account expectedSummary |
+	account := ReceptiveAccount new.
+	
+	account register: (Deposit for: 100).
+	account register: (Withdraw for: 40).
+	
+	expectedSummary := OrderedCollection with: 'Deposito por 100.' with: 'Extraccion por 40.' with: 'Balance = 60'.
+	
+	self assert: account summary equals: expectedSummary. ! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 12:30:36'!
+test06EmptyPortfolioSummaryReturnsBalance0
+
+	| portfolio expectedSummary|
+	portfolio := Portfolio new.
+	
+	expectedSummary := OrderedCollection with: 'Balance = 0'.
+	
+	self assert: portfolio summary equals: expectedSummary. ! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 16:16:21'!
+test07PortfolioWithOneAccountReportsCorrectly
+
+	| account portfolio expectedSummary |
+	account := ReceptiveAccount new.
+	portfolio := Portfolio with: account.
+	
+	account register: (Deposit for: 100).
+	expectedSummary := account summary.
+	
+	self assert: portfolio summary equals: expectedSummary. ! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 16:16:48'!
+test08PortfolioWithMoreThanOneAccountReportsCorrectly
+
+	| account1 account2 portfolio expectedSummary |
+	account1 := ReceptiveAccount new.
+	account2 := ReceptiveAccount new.
+	portfolio := Portfolio with: account1 with: account2.
+	
+	account1 register: (Deposit for: 100).
+	account2 register: (Withdraw for: 50).
+	
+	expectedSummary := account1 summaryWithoutBalance .
+	expectedSummary addAll: account2 summaryWithoutBalance .
+	expectedSummary addLast: 'Balance = ', (account1 balance + account2 balance) asString.
+	
+	self assert: portfolio summary equals: expectedSummary. ! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 16:54:20'!
+test09PortfolioWithPortfolioReportsSummaryCorrectly
+
+	| account1 account2 portfolio portfolioToAdd expectedSummary |
+	account1 := ReceptiveAccount new.
+	account2 := ReceptiveAccount new.
+	portfolioToAdd := Portfolio with: account1 with: account2.
+	portfolio := Portfolio with: portfolioToAdd.
+	
+	account1 register: (Deposit for: 100).
+	account2 register: (Withdraw for: 50).
+	
+	expectedSummary := account1 summaryWithoutBalance.
+	expectedSummary addAll: account2 summaryWithoutBalance.
+	expectedSummary addLast: 'Balance = ', (account1 balance + account2 balance) asString.
+	
+	self assert: portfolio summary equals: expectedSummary. ! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 16:31:34'!
+test10EmptyReceptiveAccountTransferNetReturns0
+
+	| account expectedNet|
+	account := ReceptiveAccount new.
+	
+	expectedNet := 0.
+	
+	self assert: account transferNet equals: expectedNet. ! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 16:54:32'!
+test11ReceptiveAccountWithMoreThanOneTransferReportsTransferNetCorrectly
+
+	| account1 account2 expectedNetAccount1 expectedNetAccount2|
+	account1 := ReceptiveAccount new.
+	account2 := ReceptiveAccount new.
+	
+	Transfer for: 100 from: account1 to: account2.
+	Transfer for: 30 from: account2 to: account1.
+	
+	expectedNetAccount1 := -70.
+	expectedNetAccount2 := 70.
+	
+	self assert: account1 transferNet equals: expectedNetAccount1.
+	self assert: account2 transferNet equals: expectedNetAccount2.
+	 ! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 16:54:42'!
+test12ReceptiveAccountWithOneTransferReportsTransferNetCorrectly
+
+	| account1 account2 expectedNetAccount1 expectedNetAccount2|
+	account1 := ReceptiveAccount new.
+	account2 := ReceptiveAccount new.
+	
+	Transfer for: 100 from: account1 to: account2.
+	
+	expectedNetAccount1 := -100.
+	expectedNetAccount2 := 100.
+	
+	self assert: account1 transferNet equals: expectedNetAccount1.
+	self assert: account2 transferNet equals: expectedNetAccount2.
+	 ! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 16:45:12'!
+test13ReceptiveAccountWithNormalTransactionsAndNoTranfersTrasferNetReturns0
+
+	| account expectedNet|
+	account := ReceptiveAccount new.
+	
+	account register: (Deposit for: 100).
+	account register: (Withdraw for: 40).
+	
+	expectedNet := 0.
+
+	self assert: account transferNet equals: expectedNet.
+
+	 ! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 16:53:35'!
+test14EmptyPortfolioTransferNetReturns0
+
+	| portfolio expectedNet|
+	portfolio := Portfolio new.
+	
+	expectedNet := 0.
+	
+	self assert: portfolio transferNet equals: expectedNet. ! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 16:58:05'!
+test15PortfolioWithOneAccountThatHasATransferReportsTransferNetCorrectly
+
+	| account1 account2 portfolio portfolioExpectedNet |
+	account1 := ReceptiveAccount new.
+	account2 := ReceptiveAccount new.
+	portfolio := Portfolio with: account1.
+	
+	Transfer for: 50 from: account1 to: account2.
+	portfolioExpectedNet := -50.
+
+	self assert: portfolio transferNet equals: portfolioExpectedNet. ! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 17:01:29'!
+test16PortfolioWithMoreThanOneAccountThatHasATransferReportsTransferNetCorrectly
+
+	| account1 account2 portfolio portfolioExpectedNet |
+	account1 := ReceptiveAccount new.
+	account2 := ReceptiveAccount new.
+	portfolio := Portfolio with: account1 with: account2.
+	
+	Transfer for: 50 from: account1 to: account2.
+	portfolioExpectedNet := 0.
+
+	self assert: portfolio transferNet equals: portfolioExpectedNet. ! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 17:02:50'!
+test17PortfolioWithPortfolioThatHasATransferReportsTransferNetCorrectly
+
+	| account1 account2 portfolio portfolioToAdd portfolioExpectedNet |
+	account1 := ReceptiveAccount new.
+	account2 := ReceptiveAccount new.
+	
+	portfolioToAdd := Portfolio with: account1.
+	portfolio := Portfolio with: portfolioToAdd.
+	
+	Transfer for: 50 from: account1 to: account2.
+	portfolioExpectedNet := -50.
+
+	self assert: portfolio transferNet equals: portfolioExpectedNet. ! !
 
 
-!classDefinition: #TransferTest category: 'Portfolio 2'!
+!classDefinition: #TransferTest category: #'Portfolio 2'!
 TestCase subclass: #TransferTest
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -392,8 +595,8 @@ test03TransferPartsKnowWhereTheyComeFrom
 	self assert: deposit associatedTransfer equals: transfer.
 	self assert: withdraw associatedTransfer equals: transfer.! !
 
-!TransferTest methodsFor: 'as yet unclassified' stamp: 'fb 5/20/2024 21:20:05'!
-test04NegativeTransferRaisesError
+!TransferTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 11:51:53'!
+test04ZeroTransferRaisesError
 
 	|account1 account2 |
 	
@@ -407,8 +610,36 @@ test04NegativeTransferRaisesError
 		withExceptionDo: [ :anError |
 			self assert: Transfer negativeOrZeroValueErrorDescription equals: anError messageText.]! !
 
+!TransferTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 11:51:14'!
+test05ShouldntBePossibleToTransferToSameAccount
+
+	|account1 |
+	
+	account1 := ReceptiveAccount new.
+	
+	self 
+		should: [ Transfer for: 50 from: account1 to: account1.]
+		raise: Error - MessageNotUnderstood 
+		withExceptionDo: [ :anError |
+			self assert: Transfer accountsAreTheSameErrorDescription equals: anError messageText.]! !
+
+!TransferTest methodsFor: 'as yet unclassified' stamp: 'fb 5/21/2024 11:52:00'!
+test06NegativeTransferRaisesError
+
+	|account1 account2 |
+	
+	account1 := ReceptiveAccount new.
+	account2 := ReceptiveAccount new.
+	
+	
+	self 
+		should: [ Transfer for: -5 from: account1 to: account2.]
+		raise: Error - MessageNotUnderstood 
+		withExceptionDo: [ :anError |
+			self assert: Transfer negativeOrZeroValueErrorDescription equals: anError messageText.]! !
+
 
-!classDefinition: #Account category: 'Portfolio 2'!
+!classDefinition: #Account category: #'Portfolio 2'!
 Object subclass: #Account
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -448,8 +679,14 @@ addedTo: aPortfolio
 
 	self subclassResponsibility ! !
 
+
+!Account methodsFor: 'reports' stamp: 'fb 5/21/2024 12:31:31'!
+summary
+
+	self subclassResponsibility! !
+
 
-!classDefinition: #Portfolio category: 'Portfolio 2'!
+!classDefinition: #Portfolio category: #'Portfolio 2'!
 Account subclass: #Portfolio
 	instanceVariableNames: 'accounts parents'
 	classVariableNames: ''
@@ -560,9 +797,36 @@ signalCanNotAddAccount
 	
 	self error: self class canNotAddAccountErrorMessage! !
 
+
+!Portfolio methodsFor: 'reports' stamp: 'fb 5/21/2024 16:14:58'!
+summary
+	|res|
+	res := self summaryWithoutBalance.
+	
+	res addLast: 'Balance = ' , self balance asString.
+	
+	^ res! !
+
+!Portfolio methodsFor: 'reports' stamp: 'fb 5/21/2024 16:15:53'!
+summaryWithoutBalance
+
+	|res|
+	
+	res := OrderedCollection new.
+	
+	accounts do: [:anAccount | res addAll: (anAccount summaryWithoutBalance)].
+	
+	^res! !
+
+!Portfolio methodsFor: 'reports' stamp: 'fb 5/21/2024 16:59:23'!
+transferNet
+
+	^accounts sum: [ :anAccount | anAccount transferNet ] ifEmpty: [ 0 ].
+	! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Portfolio class' category: 'Portfolio 2'!
+!classDefinition: 'Portfolio class' category: #'Portfolio 2'!
 Portfolio class
 	instanceVariableNames: ''!
 
@@ -587,7 +851,7 @@ with: anAccount with: anotherAccount
 		yourself! !
 
 
-!classDefinition: #ReceptiveAccount category: 'Portfolio 2'!
+!classDefinition: #ReceptiveAccount category: #'Portfolio 2'!
 Account subclass: #ReceptiveAccount
 	instanceVariableNames: 'transactions'
 	classVariableNames: ''
@@ -643,8 +907,89 @@ addedTo: aPortfolio
 	
 	! !
 
+
+!ReceptiveAccount methodsFor: 'reports' stamp: 'fb 5/21/2024 16:14:58'!
+summary
+	
+	|res|
+	
+	res := self summaryWithoutBalance.
+	
+	res addLast: ('Balance = ', self balance asString).
+	
+	^res
+! !
+
+!ReceptiveAccount methodsFor: 'reports' stamp: 'fb 5/21/2024 12:19:42'!
+summaryMessageFor: aTransaction
+	
+	(aTransaction isKindOf: NormalDeposit)
+		ifTrue:[^'Deposito por ', aTransaction value asString , '.'].
+		
+	(aTransaction isKindOf: NormalWithdraw)
+		ifTrue:[^'Extraccion por ', aTransaction value asString , '.'].
+		
+	(aTransaction isKindOf: TransferDeposit)
+		ifTrue:[^'Entrada por transferencia de ', aTransaction value asString , '.'].
+		
+	(aTransaction isKindOf: TransferWithdraw)
+		ifTrue:[^'Salida por transferencia de ', aTransaction value asString , '.'].
+			
+! !
+
+!ReceptiveAccount methodsFor: 'reports' stamp: 'fb 5/21/2024 16:14:58'!
+summaryWithoutBalance
+
+	|res|
+	
+	res := OrderedCollection new.
+	
+	transactions do: [:aTransaction | res addLast: (self summaryMessageFor: aTransaction)].
+	
+	^res! !
+
+!ReceptiveAccount methodsFor: 'reports' stamp: 'fb 5/21/2024 16:50:16'!
+transferNet
+	
+	^transactions 
+		inject: 0
+		into: [ :currentTransferNet :transaction | transaction affectTransferNet: currentTransferNet] 
+! !
+
 
-!classDefinition: #AccountTransaction category: 'Portfolio 2'!
+!classDefinition: #AccountReport category: #'Portfolio 2'!
+Object subclass: #AccountReport
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio 2'!
+
+
+!classDefinition: #Summary category: #'Portfolio 2'!
+AccountReport subclass: #Summary
+	instanceVariableNames: 'account'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio 2'!
+
+!Summary methodsFor: 'as yet unclassified' stamp: 'fb 5/27/2024 12:24:44'!
+initializeFor: anAccount
+
+	account := anAccount.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Summary class' category: #'Portfolio 2'!
+Summary class
+	instanceVariableNames: ''!
+
+!Summary class methodsFor: 'as yet unclassified' stamp: 'fb 5/27/2024 12:24:27'!
+for: anAccount
+
+	^self new initializeFor: anAccount! !
+
+
+!classDefinition: #AccountTransaction category: #'Portfolio 2'!
 Object subclass: #AccountTransaction
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -664,7 +1009,7 @@ affectBalance: aBalance
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'AccountTransaction class' category: 'Portfolio 2'!
+!classDefinition: 'AccountTransaction class' category: #'Portfolio 2'!
 AccountTransaction class
 	instanceVariableNames: ''!
 
@@ -679,7 +1024,7 @@ register: aValue on: account
 	^ transaction! !
 
 
-!classDefinition: #Deposit category: 'Portfolio 2'!
+!classDefinition: #Deposit category: #'Portfolio 2'!
 AccountTransaction subclass: #Deposit
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -688,7 +1033,7 @@ AccountTransaction subclass: #Deposit
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Deposit class' category: 'Portfolio 2'!
+!classDefinition: 'Deposit class' category: #'Portfolio 2'!
 Deposit class
 	instanceVariableNames: ''!
 
@@ -703,7 +1048,7 @@ forTransfer: aTransfer
 	^ TransferDeposit new initializeFor: aTransfer! !
 
 
-!classDefinition: #NormalDeposit category: 'Portfolio 2'!
+!classDefinition: #NormalDeposit category: #'Portfolio 2'!
 Deposit subclass: #NormalDeposit
 	instanceVariableNames: 'value'
 	classVariableNames: ''
@@ -714,6 +1059,11 @@ Deposit subclass: #NormalDeposit
 affectBalance: aBalance
 
 	^aBalance + value ! !
+
+!NormalDeposit methodsFor: 'balance' stamp: 'fb 5/21/2024 16:49:27'!
+affectTransferNet: currentTransferNet
+
+	^currentTransferNet ! !
 
 
 !NormalDeposit methodsFor: 'initialization' stamp: 'fb 5/20/2024 20:57:18'!
@@ -728,7 +1078,7 @@ value
 	^ value! !
 
 
-!classDefinition: #TransferDeposit category: 'Portfolio 2'!
+!classDefinition: #TransferDeposit category: #'Portfolio 2'!
 Deposit subclass: #TransferDeposit
 	instanceVariableNames: 'associatedTransfer'
 	classVariableNames: ''
@@ -746,6 +1096,11 @@ affectBalance: aBalance
 
 	^ aBalance + associatedTransfer value! !
 
+!TransferDeposit methodsFor: 'balance' stamp: 'fb 5/21/2024 16:49:40'!
+affectTransferNet: currentTransferNet
+
+	^currentTransferNet + associatedTransfer value! !
+
 
 !TransferDeposit methodsFor: 'associated transfer' stamp: 'fb 5/20/2024 21:13:06'!
 associatedTransfer
@@ -760,7 +1115,7 @@ value
 	^ associatedTransfer value.! !
 
 
-!classDefinition: #Withdraw category: 'Portfolio 2'!
+!classDefinition: #Withdraw category: #'Portfolio 2'!
 AccountTransaction subclass: #Withdraw
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -769,7 +1124,7 @@ AccountTransaction subclass: #Withdraw
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Withdraw class' category: 'Portfolio 2'!
+!classDefinition: 'Withdraw class' category: #'Portfolio 2'!
 Withdraw class
 	instanceVariableNames: ''!
 
@@ -784,7 +1139,7 @@ forTransfer: aTransfer
 	^ TransferWithdraw new initializeFor: aTransfer! !
 
 
-!classDefinition: #NormalWithdraw category: 'Portfolio 2'!
+!classDefinition: #NormalWithdraw category: #'Portfolio 2'!
 Withdraw subclass: #NormalWithdraw
 	instanceVariableNames: 'value'
 	classVariableNames: ''
@@ -803,13 +1158,18 @@ initializeFor: aValue
 	value := aValue ! !
 
 
+!NormalWithdraw methodsFor: 'value' stamp: 'fb 5/21/2024 16:49:50'!
+affectTransferNet: currentTransferNet
+
+	^currentTransferNet ! !
+
 !NormalWithdraw methodsFor: 'value' stamp: 'fb 5/20/2024 21:05:12'!
 value
 
 	^ value! !
 
 
-!classDefinition: #TransferWithdraw category: 'Portfolio 2'!
+!classDefinition: #TransferWithdraw category: #'Portfolio 2'!
 Withdraw subclass: #TransferWithdraw
 	instanceVariableNames: 'associatedTransfer'
 	classVariableNames: ''
@@ -820,6 +1180,11 @@ Withdraw subclass: #TransferWithdraw
 affectBalance: aBalance
 
 	^ aBalance - associatedTransfer value! !
+
+!TransferWithdraw methodsFor: 'balance' stamp: 'fb 5/21/2024 16:49:56'!
+affectTransferNet: currentTransferNet
+
+	^currentTransferNet  - associatedTransfer value! !
 
 
 !TransferWithdraw methodsFor: 'initialization' stamp: 'fb 5/20/2024 21:06:54'!
@@ -841,44 +1206,7 @@ value
 	^associatedTransfer value! !
 
 
-!classDefinition: #Report category: 'Portfolio 2'!
-Object subclass: #Report
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Portfolio 2'!
-
-
-!classDefinition: #AccountSummary category: 'Portfolio 2'!
-Report subclass: #AccountSummary
-	instanceVariableNames: 'account'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Portfolio 2'!
-
-!AccountSummary methodsFor: 'category-name' stamp: 'fb 5/20/2024 21:34:38'!
-initializeFor: anAccount 
-	
-	account := anAccount.! !
-
-!AccountSummary methodsFor: 'category-name' stamp: 'fb 5/20/2024 21:35:54'!
-report
-	
-	^ OrderedCollection with: ('Balance = ', account balance asString ).! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'AccountSummary class' category: 'Portfolio 2'!
-AccountSummary class
-	instanceVariableNames: ''!
-
-!AccountSummary class methodsFor: 'instance creation' stamp: 'fb 5/20/2024 21:34:24'!
-for: anAccount 
-
-	^self new initializeFor: anAccount ! !
-
-
-!classDefinition: #Transfer category: 'Portfolio 2'!
+!classDefinition: #Transfer category: #'Portfolio 2'!
 Object subclass: #Transfer
 	instanceVariableNames: 'associatedDeposit associatedWithdraw value'
 	classVariableNames: ''
@@ -911,9 +1239,20 @@ value
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Transfer class' category: 'Portfolio 2'!
+!classDefinition: 'Transfer class' category: #'Portfolio 2'!
 Transfer class
 	instanceVariableNames: ''!
+
+!Transfer class methodsFor: 'transactions' stamp: 'fb 5/21/2024 11:51:01'!
+accountsAreTheSameErrorDescription
+
+	 ^'COMO VAS A TRANSFERIR A LA MISMA CUENTA FLACO VOS ESTAS LOCO???????'! !
+
+!Transfer class methodsFor: 'transactions' stamp: 'fb 5/21/2024 11:50:38'!
+assertAccount: anOriginAccount isDifferentFrom: aDestinationAccount
+
+	(anOriginAccount = aDestinationAccount)
+		ifTrue:[self error: self accountsAreTheSameErrorDescription]! !
 
 !Transfer class methodsFor: 'transactions' stamp: 'fb 5/20/2024 21:18:15'!
 assertValueIsPositive: aValue
@@ -922,10 +1261,11 @@ assertValueIsPositive: aValue
 
 	! !
 
-!Transfer class methodsFor: 'transactions' stamp: 'fb 5/20/2024 21:16:53'!
+!Transfer class methodsFor: 'transactions' stamp: 'fb 5/21/2024 11:49:17'!
 for: aValue from: anOriginAccount to: aDestinationAccount 
 
 	self assertValueIsPositive: aValue.
+	self assertAccount: anOriginAccount isDifferentFrom: aDestinationAccount.
 	
 	^self new initializeFor: aValue from: anOriginAccount to: aDestinationAccount.! !
 
