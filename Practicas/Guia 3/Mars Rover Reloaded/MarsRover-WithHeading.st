@@ -26,6 +26,79 @@ test02MovingForwardLogsCorrectly
 	
 	self assert: (aLogger log) equals: (OrderedCollection with: 0@1).! !
 
+!MarsRoverLogTest methodsFor: 'as yet unclassified' stamp: 'fb 5/29/2024 15:50:25'!
+test03LogStartedAfterMovementDoesNotLog
+
+	| aLogger aMarsRover |
+	
+	aMarsRover := MarsRover at: 0@0 heading: MarsRoverHeadingNorth.
+	aMarsRover moveForward.
+	aLogger := Logger for: aMarsRover.
+	
+	self assert: (aLogger log) equals: (OrderedCollection new).! !
+
+!MarsRoverLogTest methodsFor: 'as yet unclassified' stamp: 'fb 5/29/2024 15:58:49'!
+test04LeftRotationLogsCorrectly
+
+	| aLogger aMarsRover |
+	
+	aMarsRover := MarsRover at: 0@0 heading: MarsRoverHeadingNorth.
+	aLogger := Logger for: aMarsRover.
+	aMarsRover rotateLeft.
+	
+	self assert: (aLogger log) equals: (OrderedCollection with: #West).! !
+
+!MarsRoverLogTest methodsFor: 'as yet unclassified' stamp: 'fb 5/29/2024 16:07:51'!
+test05LeftRotationAndMoveForwardLogsCorrectly
+
+	| aLogger aMarsRover |
+	
+	aMarsRover := MarsRover at: 0@0 heading: MarsRoverHeadingNorth.
+	aLogger := Logger for: aMarsRover.
+	aMarsRover rotateLeft.
+	aMarsRover moveForward.
+
+	self assert: (aLogger log) equals: (OrderedCollection with: #West with: -1@0).! !
+
+!MarsRoverLogTest methodsFor: 'as yet unclassified' stamp: 'fb 5/29/2024 16:09:07'!
+test06LeftRotationAndMoveForwardPositionLogOnlyHasPosition
+
+	| aLogger aMarsRover |
+	
+	aMarsRover := MarsRover at: 0@0 heading: MarsRoverHeadingNorth.
+	aLogger := Logger for: aMarsRover.
+	aMarsRover rotateLeft.
+	aMarsRover moveForward.
+
+	self assert: (aLogger positionsLog) equals: (OrderedCollection with: -1@0).! !
+
+!MarsRoverLogTest methodsFor: 'as yet unclassified' stamp: 'fb 5/29/2024 16:09:58'!
+test07LeftRotationAndMoveForwardHeadLogOnlyHasHead
+
+	| aLogger aMarsRover |
+	
+	aMarsRover := MarsRover at: 0@0 heading: MarsRoverHeadingNorth.
+	aLogger := Logger for: aMarsRover.
+	aMarsRover rotateLeft.
+	aMarsRover moveForward.
+
+	self assert: (aLogger headsLog) equals: (OrderedCollection with: #West).! !
+
+!MarsRoverLogTest methodsFor: 'as yet unclassified' stamp: 'fb 5/29/2024 16:12:32'!
+test08TwoLoggersStartedAtDifferentTimeLogCorrectly
+
+	| aLogger aMarsRover aSeccondLogger |
+	
+	aMarsRover := MarsRover at: 0@0 heading: MarsRoverHeadingNorth.
+	aLogger := Logger for: aMarsRover.
+	aMarsRover rotateLeft.
+	aSeccondLogger := Logger for: aMarsRover.
+	aMarsRover moveForward.
+
+	self assert: (aLogger log) equals: (OrderedCollection with: #West with: -1@0).
+	self assert: (aSeccondLogger log) equals: (OrderedCollection with: -1@0).
+! !
+
 
 !classDefinition: #MarsRoverTest category: #'MarsRover-WithHeading'!
 TestCase subclass: #MarsRoverTest
@@ -232,44 +305,79 @@ assertIsAt: newPosition heading: newHeadingType afterProcessing: commands whenSt
 	self assert: (marsRover isAt: newPosition heading: newHeadingType)! !
 
 
-!classDefinition: #Logger category: #'MarsRover-WithHeading'!
-Object subclass: #Logger
-	instanceVariableNames: 'marsRover log'
+!classDefinition: #MarsRoverWindowTest category: #'MarsRover-WithHeading'!
+TestCase subclass: #MarsRoverWindowTest
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'MarsRover-WithHeading'!
 
-!Logger methodsFor: 'category-name' stamp: 'fb 5/27/2024 21:41:52'!
-initializeFor: aMarsRover 
+!MarsRoverWindowTest methodsFor: 'as yet unclassified' stamp: 'fb 5/29/2024 16:20:33'!
+test01NewMarsRoverWindowReportsCorrectly
+
+	| aWindow aMarsRover |
 	
-	log  := OrderedCollection new.
-	marsRover := aMarsRover.
-	aMarsRover addLogger: self.! !
-
-!Logger methodsFor: 'category-name' stamp: 'fb 5/27/2024 21:43:25'!
-log
-
-	^log.! !
-
-!Logger methodsFor: 'category-name' stamp: 'fb 5/27/2024 21:44:28'!
-logMovement: aPosition 
+	aMarsRover := MarsRover at: 0@0 heading: MarsRoverHeadingNorth.
+	aWindow := Window for: aMarsRover.
 	
-	log addLast: aPosition .! !
+	self assert: (aWindow currentState) equals: (Set with: 0@0 with: #North).
+	! !
 
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+!MarsRoverWindowTest methodsFor: 'as yet unclassified' stamp: 'fb 5/29/2024 16:42:04'!
+test02MarsRoverMovesForwardWindowReportsCorrectly
 
-!classDefinition: 'Logger class' category: #'MarsRover-WithHeading'!
-Logger class
-	instanceVariableNames: ''!
+	| aWindow aMarsRover |
+	
+	aMarsRover := MarsRover at: 0@0 heading: MarsRoverHeadingNorth.
+	aWindow := Window for: aMarsRover.
+	aMarsRover moveForward.
+	
+	self assert: (aWindow currentState) equals: (Set with: 0@1 with: #North).
+	! !
 
-!Logger class methodsFor: 'category-name' stamp: 'fb 5/27/2024 21:28:00'!
-for: aMarsRover 
-	^ self new initializeFor: aMarsRover ! !
+!MarsRoverWindowTest methodsFor: 'as yet unclassified' stamp: 'fb 5/29/2024 16:43:58'!
+test03MarsRoverRotatesLeftAndMovesForwardWindowReportsCorrectly
+
+	| aWindow aMarsRover |
+	
+	aMarsRover := MarsRover at: 0@0 heading: MarsRoverHeadingNorth.
+	aWindow := Window for: aMarsRover.
+	aMarsRover rotateLeft.
+	aMarsRover moveForward.
+	
+	self assert: (aWindow currentState) equals: (Set with: -1@0 with: #West).
+	! !
+
+!MarsRoverWindowTest methodsFor: 'as yet unclassified' stamp: 'fb 5/29/2024 16:44:45'!
+test04MarsRoverRotatesLeftAndMovesForwardPositionWindowReportsCorrectly
+
+	| aWindow aMarsRover |
+	
+	aMarsRover := MarsRover at: 0@0 heading: MarsRoverHeadingNorth.
+	aWindow := Window for: aMarsRover.
+	aMarsRover rotateLeft.
+	aMarsRover moveForward.
+	
+	self assert: (aWindow currentPosition) equals: (Set with: -1@0).
+	! !
+
+!MarsRoverWindowTest methodsFor: 'as yet unclassified' stamp: 'fb 5/29/2024 16:45:37'!
+test05MarsRoverRotatesLeftAndMovesForwardHeadWindowReportsCorrectly
+
+	| aWindow aMarsRover |
+	
+	aMarsRover := MarsRover at: 0@0 heading: MarsRoverHeadingNorth.
+	aWindow := Window for: aMarsRover.
+	aMarsRover rotateLeft.
+	aMarsRover moveForward.
+	
+	self assert: (aWindow currentHead) equals: (Set with: #West).
+	! !
 
 
 !classDefinition: #MarsRover category: #'MarsRover-WithHeading'!
 Object subclass: #MarsRover
-	instanceVariableNames: 'position head logger'
+	instanceVariableNames: 'position head observer'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'MarsRover-WithHeading'!
@@ -285,32 +393,37 @@ signalInvalidCommand
 	self error: self invalidCommandErrorDescription ! !
 
 
-!MarsRover methodsFor: 'initialization' stamp: 'HAW 10/7/2021 20:10:49'!
+!MarsRover methodsFor: 'initialization' stamp: 'fb 5/29/2024 15:38:28'!
 initializeAt: aPosition heading: aHeadingType
 
 	position := aPosition.
-	head := aHeadingType for: self ! !
+	head := aHeadingType for: self.
+	observer := MarsRoverObserver new.! !
 
 
-!MarsRover methodsFor: 'heading' stamp: 'HAW 10/7/2021 20:17:02'!
+!MarsRover methodsFor: 'heading' stamp: 'fb 5/29/2024 16:02:05'!
 headEast
 	
-	head := MarsRoverHeadingEast for: self! !
+	head := MarsRoverHeadingEast for: self.
+	observer broadcastHeadUpdate: #East. ! !
 
-!MarsRover methodsFor: 'heading' stamp: 'HAW 10/7/2021 20:17:12'!
+!MarsRover methodsFor: 'heading' stamp: 'fb 5/29/2024 16:02:17'!
 headNorth
 	
-	head := MarsRoverHeadingNorth for: self ! !
+	head := MarsRoverHeadingNorth for: self.
+	observer broadcastHeadUpdate: #North. ! !
 
-!MarsRover methodsFor: 'heading' stamp: 'HAW 10/7/2021 20:17:17'!
+!MarsRover methodsFor: 'heading' stamp: 'fb 5/29/2024 16:02:28'!
 headSouth
 	
-	head := MarsRoverHeadingSouth for: self! !
+	head := MarsRoverHeadingSouth for: self.
+	observer broadcastHeadUpdate: #South. ! !
 
-!MarsRover methodsFor: 'heading' stamp: 'HAW 10/7/2021 20:17:24'!
+!MarsRover methodsFor: 'heading' stamp: 'fb 5/29/2024 16:02:43'!
 headWest
 	
-	head := MarsRoverHeadingWest for: self ! !
+	head := MarsRoverHeadingWest for: self.
+	observer broadcastHeadUpdate: #West.  ! !
 
 !MarsRover methodsFor: 'heading' stamp: 'HAW 10/7/2021 20:14:20'!
 rotateLeft
@@ -354,35 +467,34 @@ moveBackward
 	
 	head moveBackward! !
 
-!MarsRover methodsFor: 'moving' stamp: 'fb 5/27/2024 21:38:46'!
+!MarsRover methodsFor: 'moving' stamp: 'fb 5/29/2024 15:48:44'!
 moveEast
 	
 	position := position + (1@0).
-	logger logMovement: position.! !
+	observer broadcastPositionUpdate: position.! !
 
 !MarsRover methodsFor: 'moving' stamp: 'HAW 10/7/2021 20:13:53'!
 moveForward
 	
 	head moveForward! !
 
-!MarsRover methodsFor: 'moving' stamp: 'fb 5/27/2024 21:37:23'!
+!MarsRover methodsFor: 'moving' stamp: 'fb 5/29/2024 15:48:44'!
 moveNorth
 	
 	position := position + (0@1).
-	logger logMovement: position.
-	! !
+	observer broadcastPositionUpdate: position.	! !
 
-!MarsRover methodsFor: 'moving' stamp: 'fb 5/27/2024 21:37:32'!
+!MarsRover methodsFor: 'moving' stamp: 'fb 5/29/2024 15:48:44'!
 moveSouth
 	
 	position := position + (0@-1).
-	logger logMovement: position.! !
+	observer broadcastPositionUpdate: position.! !
 
-!MarsRover methodsFor: 'moving' stamp: 'fb 5/27/2024 21:37:37'!
+!MarsRover methodsFor: 'moving' stamp: 'fb 5/29/2024 15:48:44'!
 moveWest
 	
 	position := position + (-1@0).
-	logger logMovement: position.! !
+	observer broadcastPositionUpdate: position.! !
 
 
 !MarsRover methodsFor: 'command processing' stamp: 'HAW 6/30/2018 19:48:26'!
@@ -402,10 +514,18 @@ processCommand: aCommand
 	self signalInvalidCommand.! !
 
 
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'fb 5/27/2024 21:41:14'!
+!MarsRover methodsFor: 'tracking' stamp: 'fb 5/29/2024 16:27:54'!
 addLogger: aLogger
 
-	logger := aLogger .! !
+	observer addSuscriber: aLogger.! !
+
+!MarsRover methodsFor: 'tracking' stamp: 'fb 5/29/2024 16:38:34'!
+addWindow: aWindow
+
+	observer addSuscriber: aWindow.
+	aWindow initializePosition: position andHead: head symbol. 
+	
+	! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -459,6 +579,11 @@ initializeFor: aMarsRover
 	
 	marsRover := aMarsRover.! !
 
+!MarsRoverHeading methodsFor: 'initialization' stamp: 'fb 5/29/2024 16:38:50'!
+symbol
+
+	self subclassResponsibility! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'MarsRoverHeading class' category: #'MarsRover-WithHeading'!
@@ -499,6 +624,12 @@ rotateRight
 	
 	^marsRover headSouth! !
 
+
+!MarsRoverHeadingEast methodsFor: 'initialization' stamp: 'fb 5/29/2024 16:39:01'!
+symbol
+
+	^ #East! !
+
 
 !classDefinition: #MarsRoverHeadingNorth category: #'MarsRover-WithHeading'!
 MarsRoverHeading subclass: #MarsRoverHeadingNorth
@@ -527,6 +658,12 @@ rotateLeft
 rotateRight
 	
 	^marsRover headEast! !
+
+
+!MarsRoverHeadingNorth methodsFor: 'initialization' stamp: 'fb 5/29/2024 16:39:08'!
+symbol
+
+	^ #North! !
 
 
 !classDefinition: #MarsRoverHeadingSouth category: #'MarsRover-WithHeading'!
@@ -557,6 +694,12 @@ rotateRight
 	
 	^marsRover headWest! !
 
+
+!MarsRoverHeadingSouth methodsFor: 'initialization' stamp: 'fb 5/29/2024 16:39:16'!
+symbol
+
+	^ #South! !
+
 
 !classDefinition: #MarsRoverHeadingWest category: #'MarsRover-WithHeading'!
 MarsRoverHeading subclass: #MarsRoverHeadingWest
@@ -585,3 +728,170 @@ rotateLeft
 rotateRight
 	
 	^marsRover headNorth! !
+
+
+!MarsRoverHeadingWest methodsFor: 'initialization' stamp: 'fb 5/29/2024 16:39:24'!
+symbol
+
+	^ #West! !
+
+
+!classDefinition: #MarsRoverObserver category: #'MarsRover-WithHeading'!
+Object subclass: #MarsRoverObserver
+	instanceVariableNames: 'suscribers'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'MarsRover-WithHeading'!
+
+!MarsRoverObserver methodsFor: 'broadcasting' stamp: 'fb 5/29/2024 16:03:25'!
+broadcastHeadUpdate: aHead
+
+	suscribers do: [:aSuscriber | aSuscriber notifyHeadUpdate: aHead].! !
+
+!MarsRoverObserver methodsFor: 'broadcasting' stamp: 'fb 5/29/2024 15:48:44'!
+broadcastPositionUpdate: aPosition
+
+	suscribers do: [:aSuscriber | aSuscriber notifyPositionUpdate: aPosition].! !
+
+
+!MarsRoverObserver methodsFor: 'suscribers' stamp: 'fb 5/29/2024 16:26:53'!
+addSuscriber: aSuscriber
+
+	suscribers add: aSuscriber.! !
+
+
+!MarsRoverObserver methodsFor: 'initialization' stamp: 'fb 5/29/2024 15:37:55'!
+initialize
+
+	suscribers := OrderedCollection new.! !
+
+
+!classDefinition: #MarsRoverTracker category: #'MarsRover-WithHeading'!
+Object subclass: #MarsRoverTracker
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'MarsRover-WithHeading'!
+
+!MarsRoverTracker methodsFor: 'updates' stamp: 'fb 5/29/2024 16:51:51'!
+notifyHeadUpdate: aHead
+
+	self subclassResponsibility! !
+
+!MarsRoverTracker methodsFor: 'updates' stamp: 'fb 5/29/2024 16:51:56'!
+notifyPositionUpdate: aPosition
+
+	self subclassResponsibility! !
+
+
+!classDefinition: #Logger category: #'MarsRover-WithHeading'!
+MarsRoverTracker subclass: #Logger
+	instanceVariableNames: 'fullLog positionsLog headsLog'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'MarsRover-WithHeading'!
+
+!Logger methodsFor: 'tracking' stamp: 'fb 5/29/2024 16:10:16'!
+headsLog
+
+	^headsLog! !
+
+!Logger methodsFor: 'tracking' stamp: 'fb 5/29/2024 16:00:57'!
+log
+
+	^fullLog.! !
+
+!Logger methodsFor: 'tracking' stamp: 'fb 5/29/2024 16:09:16'!
+positionsLog
+
+	^positionsLog! !
+
+
+!Logger methodsFor: 'initialization' stamp: 'fb 5/29/2024 16:51:37'!
+initializeFor: aMarsRover 
+	
+	fullLog  := OrderedCollection new.
+	positionsLog := OrderedCollection new.
+	headsLog := OrderedCollection new.
+	
+	aMarsRover addLogger: self.! !
+
+
+!Logger methodsFor: 'updates' stamp: 'fb 5/29/2024 16:04:46'!
+notifyHeadUpdate:aHead
+	
+	fullLog addLast: aHead.
+	headsLog addLast: aHead.! !
+
+!Logger methodsFor: 'updates' stamp: 'fb 5/29/2024 16:05:37'!
+notifyPositionUpdate: aPosition
+	
+	fullLog addLast: aPosition.
+	positionsLog addLast: aPosition.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Logger class' category: #'MarsRover-WithHeading'!
+Logger class
+	instanceVariableNames: ''!
+
+!Logger class methodsFor: 'category-name' stamp: 'fb 5/27/2024 21:28:00'!
+for: aMarsRover 
+	^ self new initializeFor: aMarsRover ! !
+
+
+!classDefinition: #Window category: #'MarsRover-WithHeading'!
+MarsRoverTracker subclass: #Window
+	instanceVariableNames: 'position heading'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'MarsRover-WithHeading'!
+
+!Window methodsFor: 'initialization' stamp: 'fb 5/29/2024 16:25:57'!
+initializeFor: aMarsRover 
+
+	aMarsRover addWindow: self.! !
+
+!Window methodsFor: 'initialization' stamp: 'fb 5/29/2024 16:31:43'!
+initializePosition: aPosition andHead: aHead
+
+	position := aPosition.
+	heading  := aHead.! !
+
+
+!Window methodsFor: 'tracking' stamp: 'fb 5/29/2024 16:45:51'!
+currentHead
+	
+	^ Set with: heading. ! !
+
+!Window methodsFor: 'tracking' stamp: 'fb 5/29/2024 16:45:07'!
+currentPosition
+	
+	^ Set with: position.! !
+
+!Window methodsFor: 'tracking' stamp: 'fb 5/29/2024 16:37:10'!
+currentState
+
+	^Set with: position with: heading.! !
+
+
+!Window methodsFor: 'updates' stamp: 'fb 5/29/2024 16:44:13'!
+notifyHeadUpdate: aHead 
+
+	heading := aHead.! !
+
+!Window methodsFor: 'updates' stamp: 'fb 5/29/2024 16:42:28'!
+notifyPositionUpdate: aPosition 
+	
+	position := aPosition ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Window class' category: #'MarsRover-WithHeading'!
+Window class
+	instanceVariableNames: ''!
+
+!Window class methodsFor: 'instance creation' stamp: 'fb 5/29/2024 16:20:56'!
+for: aMarsRover 
+
+	^self new initializeFor: aMarsRover ! !
